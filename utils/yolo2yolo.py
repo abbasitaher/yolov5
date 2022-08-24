@@ -20,10 +20,11 @@ for p in (dst_labels_path, dst_images_path):
 
 dst_dict = {
     'person': '0',
-    'car': '2',
-    'truck': '7',
-    'loader': '7',
-    'dozer': '7',
+    'car': '1',
+    'truck': '2',
+    'loader': '2',
+    'dozer': '2',
+    'pipe' : '3'
     }
 flag = True
 
@@ -35,13 +36,13 @@ for d in tqdm(glob(os.path.join(datasets, '*'))):
     for i, l in enumerate(lines):
         src_dict[str(i)] = l.lower().strip()
 
-    labels_dir = Path(datasets) / d / 'labels'
+    labels_dir = Path(datasets) / d / 'obj_train_data'
     images_dir = Path(datasets) / d / 'images'
     if not labels_dir.exists() or not images_dir.exists():
         continue
      
     for label in glob(os.path.join(labels_dir, '*')):
-        image = label.replace('labels', 'images')[:-4] + '.png'
+        image = label.replace('obj_train_data', 'images')[:-4] + '.png'
         with open(label) as f:
             lines = f.readlines()
         label = Path(label)
@@ -53,5 +54,10 @@ for d in tqdm(glob(os.path.join(datasets, '*'))):
                 new_line = new_id + line[1:]
                 f.write(new_line)
         image_path = str(label_path).replace('labels', 'images')[:-4] + '.png'
-        if not Path(image_path).exists():
-            shutil.copyfile(image, image_path)
+        if Path(image_path).exists():
+            print(f'### image already exists: {image_path}')
+            continue
+        if not Path(image).exists():
+            print(f'### image does not exist: {image}')
+            continue
+        shutil.copyfile(image, image_path)
