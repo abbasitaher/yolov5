@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--videos', type=str, help='path of yolo datasets')
 parser.add_argument('--datasets', type=str, help='path of destination yolo dataset')
 args = parser.parse_args()
-yolo_datasets_dir = os.path.join(args.yolo_datasets)
+yolo_datasets_dir = os.path.join(args.datasets)
 yolo_datasets = glob(os.path.join(yolo_datasets_dir, '*'))
 yolo_datasets = sorted(yolo_datasets)
 
@@ -24,6 +24,8 @@ for yolo_path in yolo_datasets:
     dir_name = Path(yolo_path).stem
     if 'prg' in dir_name:
         video_name = dir_name.split('-')[0].upper()
+    elif 'weld' in dir_name:
+        video_name = dir_name.split('-')[0].lower().replace('task_', '')
     else:
         video_name = dir_name.split('-')[0].replace('rec_data', 'REC_DATA').replace('cam', 'Cam')
 
